@@ -95,7 +95,7 @@ def main(argv):
     url = args['THREAD']
     savepath = args['--directory'] or DEFAULT_SAVE_PATH
 
-    if not "8chan.co" in url:
+    if not "8ch.net" in url:
         print("Not an 8chan URL")
         return 1
 
