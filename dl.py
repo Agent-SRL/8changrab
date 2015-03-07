@@ -6,6 +6,7 @@
                          in SUBJECT. If not set 8changrab tries the subject
                          of the thread, and asks otherwise.
 --workers=<num>          # of processes to spawn [default: 10]
+--original-names
 
 -h --help     Show this
 -v --version  Show version
@@ -137,9 +138,18 @@ def main(argv):
     # Create a list of images to download
     downloads = []
     for fileinfo in fileinfos:
-        for link in fileinfo.find_all('a'):
-            download_link = link.get('href')
-            downloads.append((download_link,'%s/%s'%(download_path, link.string)))
+	if args['--original-names']:
+		download_link = ""
+		save_name = ""
+		for link in fileinfo.find_all('a'):
+			download_link = link.get('href')
+		for sp in fileinfo.find_all('span', class_="postfilename"):
+			save_name = unicode(sp.string)
+		downloads.append((download_link,'%s/%s'%(download_path,save_name)))
+	else:
+		for link in fileinfo.find_all('a'):
+			download_link = link.get('href')
+			downloads.append((download_link,'%s/%s'%(download_path, link.string)))
 
     # Use a pool of processes to download the images in the list
     pool = Pool(workers)
